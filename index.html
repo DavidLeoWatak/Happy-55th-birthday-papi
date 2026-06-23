@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Happy Birthday, Papi 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+--navy: #0a0e2e;
+--deep: #0d1b5e;
+--royal: #1a3caa;
+--sky: #3b82f6;
+--ice: #93c5fd;
+--white: #e8f0ff;
+--gold: #fcd34d;
+--pink: #f9a8d4;
+--flame1: #ff6b35;
+--flame2: #ffd700;
+}
+
+html, body {
+width: 100%; height: 100%;
+font-family: 'Nunito', sans-serif;
+background: var(--navy);
+color: var(--white);
+overflow-x: hidden;
+}
+
+#stars-canvas {
+position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+/* ── PAGES ── */
+.page {
+position: fixed; inset: 0; z-index: 10;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+transition: opacity .8s ease, transform .8s ease;
+padding: 24px;
+}
+.page.hidden {
+opacity: 0;
+pointer-events: none;
+transform: scale(.95);
+}
+
+/* ── PAGE 1 ── */
+#page1 { gap: 28px; cursor: pointer; }
+
+.cover-circle {
+width: 200px; height: 200px;
+border-radius: 50%;
+border: 4px solid var(--ice);
+box-shadow: 0 0 40px rgba(59,130,246,.6);
+background: linear-gradient(135deg, var(--deep), var(--royal));
+display: flex; align-items: center; justify-content: center;
+font-size: 76px;
+overflow: hidden;
+flex-shrink: 0;
+transition: transform .4s, box-shadow .4s;
+}
+.cover-circle:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(59,130,246,.9); }
+.cover-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.for-papi {
+font-family: 'Dancing Script', cursive;
+font-size: clamp(2.2rem, 8vw, 3.4rem);
+color: var(--ice);
+text-shadow: 0 0 30px rgba(147,197,253,.7);
+text-align: center;
+}
+
+.tap-hint {
+font-size: .85rem; color: var(--ice); opacity: .6;
+letter-spacing: .12em;
+animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:.9} }
+
+/* ── PAGE 2 ── */
+#page2 {
+overflow-y: auto;
+justify-content: flex-start;
+padding-top: 36px;
+padding-bottom: 48px;
+gap: 18px;
+}
+
+.wishes-banner {
+font-family: 'Dancing Script', cursive;
+font-size: clamp(1.7rem, 6.5vw, 2.6rem);
+color: var(--gold);
+text-align: center;
+text-shadow: 0 0 20px rgba(252,211,77,.6);
+animation: fadeDown .7s ease both;
+}
+@keyframes fadeDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:translateY(0)} }
+
+.wishes-text {
+max-width: 340px;
+text-align: center;
+font-size: clamp(.82rem, 3.4vw, .98rem);
+line-height: 1.85;
+color: var(--white);
+opacity: .9;
+animation: fadeUp .7s .25s ease both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── CAKE ── */
+.cake-scene {
+display: flex; flex-direction: column; align-items: center;
+cursor: pointer; user-select: none;
+animation: fadeUp .7s .1s ease both;
+}
+
+/* Candle */
+.candle-wrap {
+position: relative;
+width: 20px; height: 50px;
+margin-bottom: -2px; z-index: 5;
+}
+.candle-body {
+width: 100%; height: 100%;
+background: linear-gradient(to right, #a78bfa, #7c3aed, #a78bfa);
+border-radius: 4px 4px 2px 2px;
+box-shadow: inset -3px 0 6px rgba(0,0,0,.3);
+position: relative;
+}
+.candle-wick {
+position: absolute; top: -8px; left: 50%;
+transform: translateX(-50%);
+width: 2px; height: 9px;
+background: #333; border-radius: 2px;
+}
+.drip {
+position: absolute; top: 0; left: 50%; transform: translateX(-1px);
+width: 2px; height: 0;
+background: #a78bfa;
+border-radius: 0 0 2px 2px;
+transition: height .8s ease;
+}
+.flame {
+position: absolute; top: -28px; left: 50%;
+transform: translateX(-50%);
+width: 16px; height: 26px;
+background: radial-gradient(ellipse at 50% 80%, var(--flame2) 0%, var(--flame1) 45%, transparent 75%);
+border-radius: 50% 50% 30% 30%;
+filter: blur(1px);
+animation: flicker 1s ease-in-out infinite alternate;
+transform-origin: bottom center;
+transition: opacity .4s;
+}
+.flame-glow {
+position: absolute; top: -38px; left: 50%;
+transform: translateX(-50%);
+width: 32px; height: 38px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(255,200,0,.45) 0%, transparent 70%);
+animation: flicker 1s ease-in-out infinite alternate;
+pointer-events: none;
+transition: opacity .4s;
+}
+@keyframes flicker {
+0% { transform: translateX(-50%) scaleX(1) scaleY(1) rotate(-3deg); }
+33% { transform: translateX(-50%) scaleX(.85) scaleY(1.08) rotate(2deg); }
+66% { transform: translateX(-50%) scaleX(1.1) scaleY(.95) rotate(-1deg); }
+100%{ transform: translateX(-50%) scaleX(.9) scaleY(1.04) rotate(3deg); }
+}
+.blown { opacity: 0 !important; }
+
+.smoke-container {
+position: absolute; top: -60px; left: 50%;
+transform: translateX(-50%);
+pointer-events: none; z-index: 10;
+}
+.smoke-puff {
+position: absolute;
+background: rgba(200,220,255,.45);
+border-radius: 50%;
+opacity: 0;
+}
+
+/* Cake tiers */
+.tier {
+position: relative;
+border-radius: 12px 12px 6px 6px;
+box-shadow: inset -8px 0 12px rgba(0,0,0,.22), 0 6px 18px rgba(0,0,0,.4);
+}
+.tier-top { width: 110px; height: 42px; background: linear-gradient(to bottom, #1e40af, #1e3a8a); border-radius: 14px 14px 4px 4px; }
+.tier-mid { width: 150px; height: 48px; background: linear-gradient(to bottom, #1d4ed8, #1e40af); margin-top: -2px; }
+.tier-bot { width: 190px; height: 54px; background: linear-gradient(to bottom, #2563eb, #1d4ed8); margin-top: -2px; border-radius: 6px 6px 14px 14px; }
+
+.frosting {
+position: absolute; top: -6px; left: 0; right: 0;
+height: 14px;
+background: rgba(255,255,255,.92);
+border-radius: 20px 20px 0 0;
+}
+.frosting::after {
+content: '';
+position: absolute; top: 10px; left: 8px; right: 8px; height: 10px;
+background: rgba(255,255,255,.85);
+border-radius: 0 0 8px 8px;
+clip-path: polygon(0 0,5% 100%,10% 0,15% 100%,20% 0,25% 100%,30% 0,35% 100%,40% 0,45% 100%,50% 0,55% 100%,60% 0,65% 100%,70% 0,75% 100%,80% 0,85% 100%,90% 0,95% 100%,100% 0);
+}
+
+.sprinkle { position: absolute; width: 6px; height: 2px; border-radius: 2px; opacity: .85; }
+
+.plate {
+width: 210px; height: 14px;
+background: linear-gradient(to bottom, #e2e8f0, #cbd5e1);
+border-radius: 50%; margin-top: -2px;
+box-shadow: 0 6px 14px rgba(0,0,0,.4);
+}
+
+.blow-hint {
+font-size: .78rem; color: var(--ice); opacity: .7;
+margin-top: 10px; letter-spacing: .08em;
+animation: pulse 2s infinite;
+text-align: center;
+transition: opacity .4s;
+}
+.blow-hint.gone { opacity: 0; pointer-events: none; }
+
+/* ── PHOTOCARDS ── */
+.photocards-section {
+width: 100%; max-width: 390px;
+display: flex; flex-direction: column; align-items: center;
+gap: 14px; margin-top: 6px;
+visibility: hidden;
+}
+.photocards-section.show { visibility: visible; }
+
+.photocards-title {
+font-family: 'Dancing Script', cursive;
+font-size: 1.45rem; color: var(--gold);
+text-align: center;
+opacity: 0; transform: translateY(10px);
+transition: opacity .6s .1s, transform .6s .1s;
+}
+.photocards-title.show { opacity: 1; transform: translateY(0); }
+
+.photocards-grid {
+display: grid; grid-template-columns: 1fr 1fr;
+gap: 12px; width: 100%;
+}
+
+.photocard {
+background: linear-gradient(145deg, var(--deep), #0f2460);
+border: 2px solid rgba(147,197,253,.3);
+border-radius: 14px;
+overflow: hidden;
+aspect-ratio: 3/4;
+position: relative;
+box-shadow: 0 8px 28px rgba(0,0,0,.5);
+opacity: 0; transform: translateY(36px);
+transition: transform .6s ease, opacity .6s ease, box-shadow .3s;
+}
+.photocard.show { opacity: 1; transform: translateY(0); }
+.photocard:hover { box-shadow: 0 12px 36px rgba(59,130,246,.5); transform: translateY(-4px) !important; }
+.photocard:nth-child(2) { transition-delay: .1s; }
+.photocard:nth-child(3) { transition-delay: .2s; }
+.photocard:nth-child(4) { transition-delay: .3s; }
+
+.photocard img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pc-placeholder {
+width: 100%; height: 100%;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+gap: 8px; font-size: 2rem;
+background: linear-gradient(160deg, var(--deep) 0%, var(--royal) 100%);
+}
+.pc-placeholder small {
+font-size: .65rem; color: var(--ice); opacity: .55;
+letter-spacing: .1em; text-transform: uppercase;
+}
+.card-label {
+position: absolute; bottom: 0; left: 0; right: 0;
+padding: 8px 10px;
+background: linear-gradient(to top, rgba(10,14,46,.9), transparent);
+font-family: 'Dancing Script', cursive;
+font-size: .95rem; color: var(--ice);
+text-align: center;
+}
+
+/* ── CONFETTI ── */
+#confetti-canvas { position: fixed; inset: 0; z-index: 999; pointer-events: none; }
+
+/* ── PARTICLES ── */
+.particle {
+position: fixed; pointer-events: none; z-index: 998;
+animation: floatUp linear forwards;
+}
+@keyframes floatUp {
+0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+100% { opacity: 0; transform: translateY(-110vh) rotate(540deg); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+<div class="cover-circle" id="coverCircle">
+<img src="cover-image.jpg" alt="Papi" id="coverImg">
+<span id="coverFallback" style="display:none;font-size:76px;">👨</span>
+</div>
+<div class="for-papi">For Papi ✨</div>
+<p class="tap-hint">✦ tap to open ✦</p>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page hidden" id="page2">
+
+<div class="wishes-banner">Happy Birthday, Papi! 🎉</div>
+
+<p class="wishes-text">
+You are our rock, our hero, and our biggest blessing.
+May this year bring you all the joy, laughter, and love you so deeply deserve.
+<br>
+Sehat selalu, Pap! ~ David, Darell, Mami 🤍
+<br>
+<em style="color:var(--ice);">We love you endlessly. 💙</em>
+</p>
+
+<!-- CSS CAKE -->
+<div class="cake-scene" id="cakeScene">
+<div class="candle-wrap" id="candleWrap">
+<div class="flame-glow" id="flameGlow"></div>
+<div class="flame" id="flame"></div>
+<div class="candle-body">
+<div class="candle-wick"></div>
+<div class="drip" id="drip"></div>
+</div>
+<div class="smoke-container" id="smokeContainer"></div>
+</div>
+
+<div class="tier tier-top">
+<div class="frosting"></div>
+<div class="sprinkle" style="top:16px;left:18px;background:#f9a8d4;transform:rotate(30deg)"></div>
+<div class="sprinkle" style="top:26px;left:55px;background:#fcd34d;transform:rotate(-20deg)"></div>
+<div class="sprinkle" style="top:12px;left:76px;background:#6ee7b7;transform:rotate(50deg)"></div>
+</div>
+<div class="tier tier-mid">
+<div class="frosting"></div>
+<div class="sprinkle" style="top:18px;left:14px;background:#fcd34d;transform:rotate(-40deg)"></div>
+<div class="sprinkle" style="top:12px;left:48px;background:#f9a8d4;transform:rotate(10deg)"></div>
+<div class="sprinkle" style="top:26px;left:88px;background:#a5f3fc;transform:rotate(60deg)"></div>
+<div class="sprinkle" style="top:18px;left:116px;background:#6ee7b7;transform:rotate(-30deg)"></div>
+</div>
+<div class="tier tier-bot">
+<div class="frosting"></div>
+<div class="sprinkle" style="top:16px;left:18px;background:#f9a8d4;transform:rotate(20deg)"></div>
+<div class="sprinkle" style="top:28px;left:52px;background:#fcd34d;transform:rotate(-50deg)"></div>
+<div class="sprinkle" style="top:14px;left:96px;background:#a5f3fc;transform:rotate(35deg)"></div>
+<div class="sprinkle" style="top:30px;left:138px;background:#6ee7b7;transform:rotate(-15deg)"></div>
+<div class="sprinkle" style="top:20px;left:162px;background:#fcd34d;transform:rotate(45deg)"></div>
+</div>
+<div class="plate"></div>
+<p class="blow-hint" id="blowHint">✦ tap-tap cake for tiop lilin ✦</p>
+</div>
+
+<!-- PHOTOCARDS -->
+<div class="photocards-section" id="photocardsSection">
+<div class="photocards-title" id="photocardsTitle">📸 Our Family Moments</div>
+<div class="photocards-grid">
+
+<div class="photocard" id="pc1">
+<img src="pic1.jpg" alt="Moment 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+<div class="pc-placeholder" style="display:none">📷<small>pic1.jpg</small></div>
+<div class="card-label">Always smiling 😊</div>
+</div>
+
+<div class="photocard" id="pc2">
+<img src="pic2.jpg" alt="Moment 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+<div class="pc-placeholder" style="display:none">🌅<small>pic2.jpg</small></div>
+<div class="card-label">Cherished times 🌟</div>
+</div>
+
+<div class="photocard" id="pc3">
+<img src="pic3.jpg" alt="Moment 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+<div class="pc-placeholder" style="display:none">❤️<small>pic3.jpg</small></div>
+<div class="card-label">Forever loved 💙</div>
+</div>
+
+<div class="photocard" id="pc4">
+<img src="pic4.jpg" alt="Moment 4" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+<div class="pc-placeholder" style="display:none">🎊<small>pic4.jpg</small></div>
+<div class="card-label">Best memories ✨</div>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- Music: place music.mp3 in the same folder as index.html -->
+<audio id="bgMusic" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ══ STARS ══ */
+(function () {
+var c = document.getElementById('stars-canvas');
+var ctx = c.getContext('2d');
+var W, H, stars = [];
+function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+for (var i = 0; i < 160; i++) {
+stars.push({ x: Math.random() * 2000, y: Math.random() * 2000, r: Math.random() * 1.3 + .3, a: Math.random(), da: (Math.random() - .5) * .012 });
+}
+function draw() {
+ctx.clearRect(0, 0, W, H);
+stars.forEach(function (s) {
+s.a = Math.max(.1, Math.min(1, s.a + s.da));
+if (s.a <= .1 || s.a >= 1) s.da *= -1;
+ctx.beginPath();
+ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
+ctx.fillStyle = 'rgba(180,210,255,' + s.a + ')';
+ctx.fill();
+});
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+/* ══ CONFETTI ══ */
+var confCanvas = document.getElementById('confetti-canvas');
+var confCtx = confCanvas.getContext('2d');
+function resizeConf() { confCanvas.width = innerWidth; confCanvas.height = innerHeight; }
+resizeConf();
+window.addEventListener('resize', resizeConf);
+
+var confPieces = [];
+
+function launchConfetti() {
+var colors = ['#3b82f6','#60a5fa','#93c5fd','#fcd34d','#f9a8d4','#6ee7b7','#a5f3fc','#ffffff','#c4b5fd'];
+for (var i = 0; i < 180; i++) {
+confPieces.push({
+x: Math.random() * confCanvas.width,
+y: -20 - Math.random() * 180,
+vx: (Math.random() - .5) * 5,
+vy: Math.random() * 3.5 + 2,
+rot: Math.random() * 360,
+rotV: (Math.random() - .5) * 9,
+w: Math.random() * 10 + 5,
+h: Math.random() * 5 + 3,
+color: colors[Math.floor(Math.random() * colors.length)]
+});
+}
+animateConf();
+}
+
+function animateConf() {
+confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+confPieces = confPieces.filter(function (p) { return p.y < confCanvas.height + 20; });
+confPieces.forEach(function (p) {
+p.x += p.vx; p.y += p.vy; p.rot += p.rotV;
+confCtx.save();
+confCtx.translate(p.x, p.y);
+confCtx.rotate(p.rot * Math.PI / 180);
+confCtx.fillStyle = p.color;
+confCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+confCtx.restore();
+});
+if (confPieces.length > 0) requestAnimationFrame(animateConf);
+else confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+}
+
+/* ══ FLOATING EMOJI ══ */
+function spawnParticles() {
+var emojis = ['🎉','🎊','✨','💙','🎂','⭐','💫','🌟','🎈','💝'];
+for (var i = 0; i < 24; i++) {
+(function (idx) {
+setTimeout(function () {
+var el = document.createElement('div');
+el.className = 'particle';
+el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+el.style.left = (Math.random() * 100) + 'vw';
+el.style.bottom = '-30px';
+el.style.fontSize = (Math.random() * .8 + .8) + 'rem';
+el.style.animationDuration = (Math.random() * 4 + 4) + 's';
+document.body.appendChild(el);
+el.addEventListener('animationend', function () { el.remove(); });
+}, idx * 180);
+})(i);
+}
+}
+
+/* ══ COVER IMAGE FALLBACK ══ */
+var coverImg = document.getElementById('coverImg');
+if (coverImg) {
+coverImg.addEventListener('error', function () {
+coverImg.style.display = 'none';
+document.getElementById('coverFallback').style.display = 'block';
+});
+}
+
+/* ══ PAGE 1 → PAGE 2 ══ */
+var cardOpened = false;
+
+document.getElementById('page1').addEventListener('click', function () {
+if (cardOpened) return;
+cardOpened = true;
+
+document.getElementById('page1').classList.add('hidden');
+document.getElementById('page2').classList.remove('hidden');
+
+var music = document.getElementById('bgMusic');
+music.volume = .45;
+music.play().catch(function () {});
+
+launchConfetti();
+spawnParticles();
+setTimeout(spawnParticles, 2800);
+});
+
+/* ══ BLOW CANDLE — multi-tap ══ */
+var TAPS_NEEDED = 5;
+var tapCount = 0;
+var candleBlown = false;
+
+// Flame flicker intensities per tap stage
+var flickerSpeeds = ['1s','0.7s','0.45s','0.25s','0.12s'];
+
+function puffSmoke(count) {
+var smokeEl = document.getElementById('smokeContainer');
+for (var i = 0; i < count; i++) {
+(function (idx) {
+setTimeout(function () {
+var puff = document.createElement('div');
+puff.className = 'smoke-puff';
+var size = 8 + idx * 4;
+puff.style.width = size + 'px';
+puff.style.height = size + 'px';
+puff.style.left = (50 + (Math.random() - .5) * 24) + '%';
+puff.style.top = '0px';
+puff.style.transform = 'translate(-50%, 0)';
+puff.style.transition = 'opacity 1s ease, transform 1.1s ease';
+smokeEl.appendChild(puff);
+requestAnimationFrame(function () {
+requestAnimationFrame(function () {
+puff.style.opacity = '.5';
+puff.style.transform = 'translate(-50%, ' + (-30 - idx * 12) + 'px) scale(' + (1.6 + idx * .25) + ')';
+setTimeout(function () {
+puff.style.opacity = '0';
+setTimeout(function () { puff.remove(); }, 1100);
+}, 600);
+});
+});
+}, idx * 110);
+})(i);
+}
+}
+
+function shakeFlame() {
+var flame = document.getElementById('flame');
+flame.style.transition = 'transform 0.08s ease';
+flame.style.transform = 'translateX(-50%) scaleX(0.4) scaleY(1.3) rotate(12deg)';
+setTimeout(function () {
+flame.style.transform = '';
+flame.style.transition = '';
+}, 160);
+}
+
+function updateHint() {
+var hint = document.getElementById('blowHint');
+var left = TAPS_NEEDED - tapCount;
+if (left > 1) {
+hint.textContent = '💨 terus tap papi! ' + left + ' odoh lapan…';
+} else if (left === 1) {
+hint.textContent = '💨 satu kali ley pap!';
+}
+}
+
+document.getElementById('cakeScene').addEventListener('click', function () {
+if (candleBlown) return;
+tapCount++;
+
+var flame = document.getElementById('flame');
+var flameGlow = document.getElementById('flameGlow');
+
+// Each tap: shake + small smoke + speed up flicker
+shakeFlame();
+puffSmoke(tapCount);
+
+// Speed up flicker animation with each tap
+var speed = flickerSpeeds[Math.min(tapCount - 1, flickerSpeeds.length - 1)];
+flame.style.animationDuration = speed;
+flameGlow.style.animationDuration = speed;
+
+// Shrink flame slightly each tap
+var scale = 1 - (tapCount - 1) * 0.15;
+flame.style.transform = 'translateX(-50%) scale(' + Math.max(scale, 0.25) + ')';
+
+if (tapCount < TAPS_NEEDED) {
+updateHint();
+return;
+}
+
+// ── FINAL TAP: blow out ──
+candleBlown = true;
+flame.classList.add('blown');
+flameGlow.classList.add('blown');
+document.getElementById('blowHint').classList.add('gone');
+
+// Big smoke burst
+puffSmoke(7);
+
+setTimeout(function () {
+launchConfetti();
+spawnParticles();
+showPhotocards();
+}, 900);
+});
+
+function showPhotocards() {
+var section = document.getElementById('photocardsSection');
+section.classList.add('show');
+setTimeout(function () {
+document.getElementById('photocardsTitle').classList.add('show');
+}, 100);
+['pc1','pc2','pc3','pc4'].forEach(function (id, i) {
+setTimeout(function () {
+document.getElementById(id).classList.add('show');
+}, 200 + i * 160);
+});
+setTimeout(function () {
+section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}, 800);
+}
+</script>
+</body>
+</html>
